@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
+using Transporter.Infrastructure.Commends.Users;
 using Transporter.Infrastructure.DTO;
 using Transporter.Infrastructure.Services;
 
@@ -18,6 +19,13 @@ namespace Transporter.Api.Controllers
         [HttpGet("{email}")]
         public UserDto Get(string email) =>
             _userService.Get(email);
+
+
+        [HttpPost("")]
+        public void Post([FromBody]CreateUser request)
+        {
+            _userService.Register(request.Email, request.Username, request.Password);
+        }
     }
     
 }

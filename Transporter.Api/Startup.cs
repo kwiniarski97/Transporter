@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Transporter.Core.Repositories;
+using Transporter.Infrastructure.Mappers;
 using Transporter.Infrastructure.Repositories;
 using Transporter.Infrastructure.Services;
 
@@ -30,6 +32,7 @@ namespace Transporter.Api
             services.AddScoped<IDriverService, DriverService>();
             services.AddScoped<IUserRepository, LocalUserRepository>();
             services.AddScoped<IUserService, UserService>(); //gdy constructor dostanie IUserService to wywola implementacje UserService
+            services.AddSingleton(AutoMapperConfig.InitMapper());
             services.AddMvc();
         }
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Transporter.Core.Domain;
 using Transporter.Core.Repositories;
 
@@ -16,11 +17,11 @@ namespace Transporter.Infrastructure.Repositories
             new User("email3@email.pl", "username@", "password", "salt")
         };
 
-        public User Get(Guid id) =>
-            _users.Single(x => x.Id == id);
+        public async Task<User> Get(Guid id) =>
+            await Task.FromResult(_users.SingleOrDefault(x => x.Id == id));
 
         public User Get(string email) =>
-            _users.Single(x => x.Email == email.ToLowerInvariant());
+            _users.SingleOrDefault(x => x.Email == email.ToLowerInvariant());
 
         public IEnumerable<User> GetAll() =>
             _users;
