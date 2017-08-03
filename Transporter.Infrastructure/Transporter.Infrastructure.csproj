@@ -2,4 +2,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard1.4</TargetFramework>
   </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Transporter.Core\Transporter.Core.csproj" />
+  </ItemGroup>
 </Project>

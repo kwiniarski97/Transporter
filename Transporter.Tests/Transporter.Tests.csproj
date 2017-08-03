@@ -7,4 +7,8 @@
     <PackageReference Include="xunit" Version="2.2.0" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.2.0" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Transporter.Core\Transporter.Core.csproj" />
+    <ProjectReference Include="..\Transporter.Infrastructure\Transporter.Infrastructure.csproj" />
+  </ItemGroup>
 </Project>
