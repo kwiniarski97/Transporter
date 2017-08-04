@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Transporter.Infrastructure.Commends.Users;
 using Transporter.Infrastructure.DTO;
@@ -17,14 +19,14 @@ namespace Transporter.Api.Controllers
         }
 
         [HttpGet("{email}")]
-        public UserDto Get(string email) =>
-            _userService.Get(email);
+        public async Task<UserDto> Get(string email) =>
+               await _userService.GetAsync(email);
 
 
         [HttpPost("")]
-        public void Post([FromBody]CreateUser request)
+        public async Task Post([FromBody]CreateUser request)
         {
-            _userService.Register(request.Email, request.Username, request.Password);
+            await _userService.RegisterAsync(request.Email, request.Username, request.Password);
         }
     }
     

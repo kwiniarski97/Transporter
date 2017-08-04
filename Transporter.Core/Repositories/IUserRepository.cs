@@ -1,18 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Transporter.Core.Domain;
 
 namespace Transporter.Core.Repositories
 {
     public interface IUserRepository
     {
-        User Get(Guid id);
-        User Get(string email);
+        Task<User> GetAsync(Guid id);
+        Task<User> GetAsync(string email);
 
-        IEnumerable<User> GetAll();
+        Task<IEnumerable<User>> GetAllAsync();
         
-        void Add(User user);
-        void Remove(Guid id);
-        void Update (User user);
+        Task AddAsync(User user);
+        Task RemoveAsync(Guid id);
+        Task UpdateAsync (User user);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Transporter.Core.Repositories;
 
 namespace Transporter.Core.Domain
 {
@@ -19,6 +20,8 @@ namespace Transporter.Core.Domain
             UserId = userId;
             Vehicle = vehicle;
         }
+
+
 
         public void SetVehicle(string name, string brand, uint seats) =>
             Vehicle = new Vehicle(name, brand, seats);

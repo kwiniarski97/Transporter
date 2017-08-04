@@ -1,18 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Transporter.Core.Domain;
 
 namespace Transporter.Core.Repositories
 {
     public interface IDriverRepository
     {
-        Driver Get(Guid id);
-        Vehicle GetVehicle(Guid id);
+        Task<Driver> GetAsync(Guid id);
+        Task<Vehicle> GetVehicleAsync(Guid id);
 
-        IEnumerable<Driver> GetAll();
+        Task<IEnumerable<Driver>> GetAllAsync();
 
-        void Add(Driver driver);
-        void Remove(Guid userId);
-        void Update(Driver driver);
+        Task AddAsync(Driver driver);
+        Task RemoveAsync(Guid userId);
+        Task UpdateAsync(Driver driver);
     }
 }

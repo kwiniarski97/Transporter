@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using AutoMapper;
 using Transporter.Core.Domain;
 using Transporter.Core.Repositories;
@@ -18,11 +19,11 @@ namespace Transporter.Infrastructure.Services
         }
 
 
-        public DriverDto Get(Guid userId)
+        public async Task<DriverDto> GetAsync(Guid userId)
         {
-            var driver = _driverRepository.Get(userId);
+            var driver = _driverRepository.GetAsync(userId);
 
-            return _mapper.Map<Driver, DriverDto>(driver);
+            return _mapper.Map<Driver, DriverDto>(await driver);
         }
     }
 }

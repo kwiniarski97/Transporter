@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Transporter.Core.Domain;
 using Transporter.Infrastructure.DTO;
 
@@ -8,8 +9,6 @@ namespace Transporter.Infrastructure.Services
     {
         //TODO odkomentować
         //void AddDriver(Guid id,Vehicle vehicle);
-        DriverDto Get(Guid userId);
-
-
+        Task<DriverDto> GetAsync(Guid userId);
     }
 }
