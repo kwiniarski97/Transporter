@@ -11,15 +11,14 @@ namespace Transporter.Api.Controllers
     {
         private readonly IDriverService _driverService;
 
-        public DriversController(IDriverService driverService)
-        {
+        public DriversController(IDriverService driverService) =>
             _driverService = driverService;
-        }
+
 
         [HttpGet("{email}")]
         public async Task<DriverDto> Get(Guid id) =>
             await _driverService.GetAsync(id);
-        
-          //TODO get all drivers
+
+        //TODO get all drivers
     }
 }

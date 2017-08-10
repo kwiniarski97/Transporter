@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using Transporter.Infrastructure.Commends.Users;
-using Transporter.Infrastructure.DTO;
 using Transporter.Infrastructure.Services;
 
 namespace Transporter.Api.Controllers
@@ -12,22 +10,31 @@ namespace Transporter.Api.Controllers
     public class UsersController : Controller
     {
         private readonly IUserService _userService;
-        
-        public UsersController(IUserService userService)
+        private readonly ICommandDispatcher _commandDispatcher;
+
+        public UsersController(IUserService userService, ICommandDispatcher commandDispatcher)
         {
             _userService = userService;
+            _commandDispatcher = commandDispatcher;
         }
 
         [HttpGet("{email}")]
-        public async Task<UserDto> Get(string email) =>
-               await _userService.GetAsync(email);
-
-
-        [HttpPost("")]
-        public async Task Post([FromBody]CreateUser request)
+        public async Task<IActionResult> Get(string email)
         {
-            await _userService.RegisterAsync(request.Email, request.Username, request.Password);
+            var user = await _userService.GetAsync(email);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            return Json(user, new JsonSerializerSettings()); // without jsonserializersetting it doesnt work
+        }
+
+        //21.21
+        [HttpPost("")]
+        public async Task<IActionResult> Post([FromBody] CreateUser command)
+        {
+            await _commandDispatcher.DispatchAsync(command);
+            return Created($"users/{command.Email}", new object());
         }
     }
-    
 }

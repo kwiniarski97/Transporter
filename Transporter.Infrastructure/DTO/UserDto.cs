@@ -11,7 +11,7 @@ namespace Transporter.Infrastructure.DTO
 
         //TODO encrytption
         public string FullName { get; set; }
-        public DateTime CreatedAt { get; set; }
 
+        public DateTime CreatedAt { get; set; }
     }
 }

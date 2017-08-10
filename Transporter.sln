@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Transporter.Api", "Transpor
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Transporter.Tests", "Transporter.Tests\Transporter.Tests.csproj", "{9682F85B-F1CA-4D6C-9695-D6C10C538932}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Transporter.Tests.EndToEnd", "Transporter.Tests.EndToEnd\Transporter.Tests.EndToEnd.csproj", "{8F238876-8DAE-4B9A-8AD6-938AD123E11D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Transporter.Tests.EndToEnd", "Transporter.Tests.EndToEnd\Transporter.Tests.EndToEnd.csproj", "{E12CF4BF-DB76-47D4-9EA9-4AFD1904C0DF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,10 +35,10 @@ Global
 		{9682F85B-F1CA-4D6C-9695-D6C10C538932}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9682F85B-F1CA-4D6C-9695-D6C10C538932}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9682F85B-F1CA-4D6C-9695-D6C10C538932}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8F238876-8DAE-4B9A-8AD6-938AD123E11D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8F238876-8DAE-4B9A-8AD6-938AD123E11D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8F238876-8DAE-4B9A-8AD6-938AD123E11D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8F238876-8DAE-4B9A-8AD6-938AD123E11D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E12CF4BF-DB76-47D4-9EA9-4AFD1904C0DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E12CF4BF-DB76-47D4-9EA9-4AFD1904C0DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E12CF4BF-DB76-47D4-9EA9-4AFD1904C0DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E12CF4BF-DB76-47D4-9EA9-4AFD1904C0DF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
