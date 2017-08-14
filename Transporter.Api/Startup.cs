@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
@@ -6,11 +7,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Transporter.Core.Repositories;
-using Transporter.Infrastructure.IoC.Modules;
-using Transporter.Infrastructure.Mappers;
-using Transporter.Infrastructure.Repositories;
+using Microsoft.IdentityModel.Tokens;
+using Transporter.Infrastructure.IoC;
 using Transporter.Infrastructure.Services;
+using Transporter.Infrastructure.Settings;
 
 namespace Transporter.Api
 {
@@ -25,7 +25,7 @@ namespace Transporter.Api
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
@@ -35,19 +35,15 @@ namespace Transporter.Api
         
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            services.AddScoped<IDriverRepository, LocalDriverRepository>();
-            services.AddScoped<IDriverService, DriverService>();
-            services.AddScoped<IUserRepository, LocalUserRepository>();
-            //gdy constructor dostanie IUserService to wywola implementacje UserService
-            services.AddScoped<IUserService, UserService>(); 
-            services.AddSingleton(AutoMapperConfig.InitMapper());
+            services.AddAuthorization(x => x.AddPolicy("admin", p => p.RequireRole("admin"))); //wymaganie roli admin
+            services.AddMemoryCache();
             services.AddMvc();
-            
             //autofac
             var builder = new ContainerBuilder();
             builder.Populate(services);
-            builder.RegisterModule<CommandModule>();
+            builder.RegisterModule(new ContainerModule(Configuration));
             ApplicationContainer = builder.Build();
+            
             
             return new AutofacServiceProvider(ApplicationContainer);
             
@@ -60,6 +56,27 @@ namespace Transporter.Api
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
+            var jwtSettings = app.ApplicationServices.GetService<JwtSettings>();
+
+            app.UseJwtBearerAuthentication(new JwtBearerOptions
+            {
+                AutomaticAuthenticate = true,
+                TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidIssuer = jwtSettings.Issuer,
+                    ValidateAudience = false,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key))
+                }
+            });
+            
+            //Data seed
+            var generalSettings = app.ApplicationServices.GetService<GeneralSettings>();
+            if (generalSettings.SeedData)
+            {
+                var dataIntializer = app.ApplicationServices.GetService<IDataInitializer>();
+                dataIntializer.SeedAsync();
+            }
+            
             app.UseMvc();
 
             applicationLifetime.ApplicationStopped.Register(() => ApplicationContainer.Dispose());

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -11,24 +12,26 @@ namespace Transporter.Infrastructure.Services
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
+        private readonly IEncrypter _encrypter;
         private readonly IMapper _mapper;
 
-        public UserService(IUserRepository userRepository, IMapper mapper)
+        public UserService(IUserRepository userRepository, IEncrypter encrypter, IMapper mapper)
         {
             _userRepository = userRepository;
+            _encrypter = encrypter;
             _mapper = mapper;
         }
 
-        public async Task RegisterAsync(string email, string userName, string password)
+        public async Task RegisterAsync(Guid id, string email, string userName, string password, string role)
         {
             var user = await _userRepository.GetAsync(email);
             if (user != null)
             {
                 throw new Exception($"User with email {email}, already exists.");
             }
-            //TODO usunac po zrobieniu szyfrowania
-            var salt = Guid.NewGuid().ToString("N");
-            user = new User(email, userName, password, salt);
+            var salt = _encrypter.GetSalt(password);
+            var hash = _encrypter.GetHash(password, salt);
+            user = new User(id, email, userName, hash, salt,role);
             await _userRepository.AddAsync(user);
         }
 
@@ -37,6 +40,29 @@ namespace Transporter.Infrastructure.Services
             var user =  await _userRepository.GetAsync(email);
             //map user to user dto from user OBJ
             return _mapper.Map<User, UserDto>(user);
+        }
+
+        public async Task LoginAsync(string email, string password)
+        {
+            var user = await _userRepository.GetAsync(email);
+            if (user != null)
+            {
+                throw new Exception($"User with email {email}, doesn't exist.");
+            }
+            var hash = _encrypter.GetHash(password, user.Salt);
+
+            if (user.Password == hash)
+            {
+                //LOGIN
+                return;
+            }
+            throw new Exception("Invalid creditensials");
+        }
+        
+        public async Task<IEnumerable<UserDto>> GetAllAsync()
+        {
+            var users = await _userRepository.GetAllAsync();
+            return  _mapper.Map<IEnumerable<User>,IEnumerable<UserDto>>(users);
         }
     }
 }

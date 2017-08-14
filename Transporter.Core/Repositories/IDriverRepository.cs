@@ -5,7 +5,7 @@ using Transporter.Core.Domain;
 
 namespace Transporter.Core.Repositories
 {
-    public interface IDriverRepository
+    public interface IDriverRepository : IRepository
     {
         Task<Driver> GetAsync(Guid id);
         Task<Vehicle> GetVehicleAsync(Guid id);

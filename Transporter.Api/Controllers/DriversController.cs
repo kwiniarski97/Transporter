@@ -1,24 +1,36 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Transporter.Infrastructure.DTO;
+using Transporter.Infrastructure.Commends.Drivers;
+using Transporter.Infrastructure.Commends.Users;
 using Transporter.Infrastructure.Services;
 
 namespace Transporter.Api.Controllers
 {
     [Route("[controller]")]
-    public class DriversController : Controller
+    public class DriversController : ApiControllerBase
     {
         private readonly IDriverService _driverService;
 
-        public DriversController(IDriverService driverService) =>
+        public DriversController(IDriverService driverService,
+            ICommandDispatcher commandDispatcher) : base(commandDispatcher)
+        {
             _driverService = driverService;
+        }
 
 
-        [HttpGet("{email}")]
-        public async Task<DriverDto> Get(Guid id) =>
-            await _driverService.GetAsync(id);
+        [HttpGet]
+        public async Task<IActionResult> Get()
+        {
+            var drivers = await _driverService.GetAllAsync();
+            return Json(drivers);
+        }
 
-        //TODO get all drivers
+
+        [HttpPost("")]
+        public async Task<IActionResult> Post([FromBody] CreateDriver command)
+        {
+            await CommandDispatcher.DispatchAsync(command);
+            return Created($"drivers/{command.UserId}", new object());
+        }
     }
 }

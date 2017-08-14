@@ -10,12 +10,7 @@ namespace Transporter.Infrastructure.Repositories
     public class LocalUserRepository : IUserRepository
     {
         //starting set
-        private static ISet<User> _users = new HashSet<User>
-        {
-            new User("email1@email.pl", "username1", "password1", "salt"),
-            new User("email2@email.pl", "username2", "password2", "salt"),
-            new User("email3@email.pl", "username@", "password", "salt")
-        };
+        private static ISet<User> _users = new HashSet<User>();
 
         public async Task<User> GetAsync(Guid id) =>
             await Task.FromResult(_users.SingleOrDefault(x => x.Id == id));

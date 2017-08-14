@@ -7,17 +7,23 @@ using Transporter.Infrastructure.Services;
 namespace Transporter.Api.Controllers
 {
     [Route("[controller]")]
-    public class UsersController : Controller
+    public class UsersController : ApiControllerBase
     {
         private readonly IUserService _userService;
-        private readonly ICommandDispatcher _commandDispatcher;
 
-        public UsersController(IUserService userService, ICommandDispatcher commandDispatcher)
+        public UsersController(IUserService userService,
+            ICommandDispatcher commandDispatcher) : base(commandDispatcher)
         {
             _userService = userService;
-            _commandDispatcher = commandDispatcher;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Get()
+        {
+            var users = _userService.GetAllAsync();
+            return Json(users);
+        }
+        
         [HttpGet("{email}")]
         public async Task<IActionResult> Get(string email)
         {
@@ -33,8 +39,9 @@ namespace Transporter.Api.Controllers
         [HttpPost("")]
         public async Task<IActionResult> Post([FromBody] CreateUser command)
         {
-            await _commandDispatcher.DispatchAsync(command);
+            await CommandDispatcher.DispatchAsync(command);
             return Created($"users/{command.Email}", new object());
         }
+        
     }
 }

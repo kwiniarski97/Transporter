@@ -2,17 +2,20 @@
 {
     public class PassangerNode
     {
-        public Node Node { get; protected set; }
         public Passanger Passanger { get; protected set; }
+        public Node Node { get; protected set; }
 
-        public PassangerNode(Node node, Passanger passanger)
+        public PassangerNode(Passanger passanger, Node node)
         {
-            Node = node;
             Passanger = passanger;
+            Node = node;
         }
 
         protected PassangerNode()
         {
         }
+
+        public static PassangerNode Create(Passanger passanger, Node node) =>
+            new PassangerNode(passanger, node);
     }
 }

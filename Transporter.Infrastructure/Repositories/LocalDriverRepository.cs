@@ -9,18 +9,15 @@ namespace Transporter.Infrastructure.Repositories
 {
     public class LocalDriverRepository : IDriverRepository
     {
-        
-        private static ISet<Driver> _drivers = new HashSet<Driver>
-        {
-            
-        };
+
+        private static ISet<Driver> _drivers = new HashSet<Driver>();
 
 
         public async Task<Driver> GetAsync(Guid userId) =>
-            await Task.FromResult(_drivers.Single(x => x.UserId == userId));
+            await Task.FromResult(_drivers.SingleOrDefault(x => x.UserId == userId));
 
         public async Task<Vehicle> GetVehicleAsync(Guid userId) =>
-           await Task.FromResult(_drivers.Single(x => x.UserId == userId).Vehicle);
+           await Task.FromResult(_drivers.SingleOrDefault(x => x.UserId == userId).Vehicle);
 
         public async Task<IEnumerable<Driver>> GetAllAsync() =>
            await Task.FromResult(_drivers);

@@ -11,36 +11,23 @@ namespace Transporter.Core.Domain
 
         public Guid Id { get; protected set; }
         public string Email { get; protected set; }
-
         public string Username { get; protected set; }
-
-        //TODO encrytption
+        public string Role { get; protected set; }
         public string Password { get; protected set; }
-
         public string Salt { get; protected set; }
         public string FullName { get; protected set; }
         public DateTime CreatedAt { get; protected set; }
 
-        //TODO zrobic settery i ta metode rozwalic na mniejsze
-        public User(string email, string username, string password, string salt)
+        public User(Guid id, string email, string username, string password, string salt, string role)
         {
-            if (string.IsNullOrWhiteSpace(username) ||
-                string.IsNullOrWhiteSpace(password))
-            {
-                throw new Exception("All fields must be filled.");
-            }
-
-            if (!UsernameRegex.IsMatch(username))
-            {
-                throw new Exception("Username is invalid.");
-            }
             //TODO password encrypt
-            Id = Guid.NewGuid();
+            Id = id;
             SetEmail(email);
             SetUsername(username);
-            Password = password;
+            SetPassword(password);
             Salt = salt;
             CreatedAt = DateTime.UtcNow;
+            Role = role;
         }
 
         protected User()
@@ -81,6 +68,31 @@ namespace Transporter.Core.Domain
                 throw new Exception("Invalid username.");
             }
             Username = username;
+        }
+
+        private void SetPassword(string password)
+        {
+            if (string.IsNullOrWhiteSpace(password))
+            {
+                throw new Exception("Password cannot be empty.");
+            }
+
+            if (password == Password)
+            {
+                return;
+            }
+
+            if (password.Length < 8)
+            {
+                throw new Exception("Password must be longer than 8 characters.");
+            }
+
+            if (password.Length >= 64)
+            {
+                throw new Exception("Password cannot exceed 64 characters");
+            }
+
+            Password = password;
         }
     }
 }
