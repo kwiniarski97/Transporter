@@ -4,7 +4,6 @@
     {
         public string Token { get; set; }
         
-        //ticks
         public long Expiry { get; set; }
     }
 }

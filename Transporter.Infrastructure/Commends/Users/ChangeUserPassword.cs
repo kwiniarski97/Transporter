@@ -1,6 +1,6 @@
 ﻿namespace Transporter.Infrastructure.Commends.Users
 {
-    public class ChangeUserPassword : ICommand
+    public class ChangeUserPassword : AuthenticatedCommandBase
     {
         public string CurrentPassword { get; set; }
 

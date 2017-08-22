@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Transporter.Core.Domain;
 using Transporter.Infrastructure.DTO;
 
 namespace Transporter.Infrastructure.Services

@@ -1,1 +1,1 @@
-Transporter
+Projekt stworzony w celach rekrutacyjnych

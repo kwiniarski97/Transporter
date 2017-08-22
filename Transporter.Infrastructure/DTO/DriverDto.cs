@@ -6,9 +6,11 @@ namespace Transporter.Infrastructure.DTO
 {
     public class DriverDto
     {
-        public Guid id { get; set; }
+        public Guid Id { get; set; }
         
         public string Name { get; set; }
+        
+        public Vehicle Vehicle { get; set; }
         
         public DateTime UpdatedAt { get; set; }
     }

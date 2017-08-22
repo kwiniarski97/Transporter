@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Transporter.Infrastructure.Commends.Drivers;
 using Transporter.Infrastructure.Commends.Users;
@@ -24,13 +25,24 @@ namespace Transporter.Api.Controllers
             var drivers = await _driverService.GetAllAsync();
             return Json(drivers);
         }
+        
+        [HttpGet("{userId}")]
+        public async Task<IActionResult> Get(Guid userId)
+        {
+            var driver = await _driverService.GetAsync(userId);
+            if (driver == null)
+            {
+                return NotFound();
+            }
+            return Json(driver);
+        }
 
 
         [HttpPost("")]
         public async Task<IActionResult> Post([FromBody] CreateDriver command)
         {
-            await CommandDispatcher.DispatchAsync(command);
-            return Created($"drivers/{command.UserId}", new object());
+            await DispatchAsync(command);
+            return Created($"drivers/{command.userId}", null);
         }
     }
 }

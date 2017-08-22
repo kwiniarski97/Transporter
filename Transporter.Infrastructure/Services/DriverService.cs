@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -17,12 +16,15 @@ namespace Transporter.Infrastructure.Services
 
         private readonly IMapper _mapper;
 
+        private readonly IVehicleProvider _vehicleProvider;
+
         public DriverService(IDriverRepository driverRepository, IMapper mapper,
-            IUserRepository userRepository)
+            IUserRepository userRepository, IVehicleProvider vehicleProvider)
         {
             _driverRepository = driverRepository;
             _mapper = mapper;
             _userRepository = userRepository;
+            _vehicleProvider = vehicleProvider;
         }
 
 
@@ -42,22 +44,24 @@ namespace Transporter.Infrastructure.Services
             await _driverRepository.AddAsync(driver);
         }
 
-        public async Task SetVehicleAsync(Guid id, string brand, string name, uint seats)
+        public async Task SetVehicleAsync(Guid id, string brand, string name)
         {
             var driver = await _driverRepository.GetAsync(id);
             if (driver == null)
             {
                 throw new Exception($"Driver of id {id} not found.");
             }
-            driver.SetVehicle(brand, name, seats);
+            var vehicleDto = await _vehicleProvider.GetAsync(brand, name);
+            var vehicle = new Vehicle(brand, name, vehicleDto.Seats);
+            driver.SetVehicle(vehicle);
             await _driverRepository.UpdateAsync(driver);
         }
 
-        public async Task<DriverDto> GetAsync(Guid userId)
+        public async Task<DriverDetailsDto> GetAsync(Guid userId)
         {
             var driver = await _driverRepository.GetAsync(userId);
 
-            return _mapper.Map<Driver, DriverDto>(driver);
+            return _mapper.Map<Driver, DriverDetailsDto>(driver);
         }
 
         public async Task<IEnumerable<DriverDto>> GetAllAsync()

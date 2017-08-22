@@ -1,0 +1,38 @@
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Transporter.Infrastructure.Commends.Drivers;
+using Transporter.Infrastructure.Commends.Users;
+
+namespace Transporter.Api.Controllers
+{
+    [Route("drivers/routes")]
+    public class DriverRoutesController : ApiControllerBase
+    {
+
+        public DriverRoutesController(ICommandDispatcher commandDispatcher) : base(commandDispatcher)
+        {
+        }
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> Post([FromBody] CreateDriverRoute command)
+        {
+            await DispatchAsync(command);
+            return NoContent();
+        }
+
+        [Authorize]
+        [HttpPost("name")]
+        public async Task<IActionResult> Delete(string name)
+        {
+            var command = new DeleteDriverRoute
+            {
+                Name = name
+            };
+            await DispatchAsync(command);
+
+            return NoContent();
+        }
+    
+}
+}

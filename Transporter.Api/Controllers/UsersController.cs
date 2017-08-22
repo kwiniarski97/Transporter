@@ -20,10 +20,10 @@ namespace Transporter.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var users = _userService.GetAllAsync();
+            var users = await _userService.GetAllAsync();
             return Json(users);
         }
-        
+
         [HttpGet("{email}")]
         public async Task<IActionResult> Get(string email)
         {
@@ -32,16 +32,15 @@ namespace Transporter.Api.Controllers
             {
                 return NotFound();
             }
-            return Json(user, new JsonSerializerSettings()); // without jsonserializersetting it doesnt work
+            return Json(user); // without jsonserializersetting it doesnt work
         }
 
         //21.21
         [HttpPost("")]
         public async Task<IActionResult> Post([FromBody] CreateUser command)
         {
-            await CommandDispatcher.DispatchAsync(command);
-            return Created($"users/{command.Email}", new object());
+            await DispatchAsync(command);
+            return Created($"users/{command.Email}", null);
         }
-        
     }
 }

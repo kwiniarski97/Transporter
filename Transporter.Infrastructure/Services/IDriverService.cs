@@ -12,8 +12,8 @@ namespace Transporter.Infrastructure.Services
 
         Task CreateDriverAsync(Guid id);
 
-        Task SetVehicleAsync(Guid id, string brand, string name, uint seats);
-        Task<DriverDto> GetAsync(Guid userId);
+        Task SetVehicleAsync(Guid id, string brand, string name);
+        Task<DriverDetailsDto> GetAsync(Guid userId);
         Task<IEnumerable<DriverDto>> GetAllAsync();
     }
 }

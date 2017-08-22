@@ -13,12 +13,15 @@ namespace Transporter.Infrastructure.Services
 
         private readonly IDriverService _driverService;
 
+        private readonly IDriverRouteService _driverRouteService;
+
         public DataInitializer(IUserService userService, ILogger<DataInitializer> logger,
-            IDriverService driverService)
+            IDriverService driverService, IDriverRouteService driverRouteService)
         {
             _userService = userService;
             _logger = logger;
             _driverService = driverService;
+            _driverRouteService = driverRouteService;
         }
 
         public async Task SeedAsync()
@@ -33,14 +36,19 @@ namespace Transporter.Infrastructure.Services
                 var login = $"user{i}";
                 tasks.Add(_userService.RegisterAsync(id, $"{login}@email.pl", login, "password", "user"));
 
-                if (i % 2 != 0) continue;
-                _logger.LogTrace("Adding user as driver");
-                tasks.Add(_driverService.CreateDriverAsync(id));
-                tasks.Add(_driverService.SetVehicleAsync(id, "mercedes", "vito", 4));
-                
-                //test
-                var testdriver = _driverService.GetAsync(id);
-                Console.WriteLine(testdriver);
+                if (i % 2 == 0)
+                {
+                    _logger.LogTrace("Adding user as driver");
+                    tasks.Add(_driverService.CreateDriverAsync(id));
+                    tasks.Add(_driverService.SetVehicleAsync(id, "BMW", "i8"));
+                    
+                    _logger.LogTrace($"Adding routes for driver of id:{id}...");
+                    for (var j = 0; j < 4; j++)
+                    {
+                        tasks.Add(_driverRouteService.AddAsync(id, $"Default{j}", 1, 2, 3, 4));
+                    }
+                    
+                }
             }
 
             //create 3 admins
@@ -51,7 +59,9 @@ namespace Transporter.Infrastructure.Services
                 var login = $"admin{i}";
                 tasks.Add(_userService.RegisterAsync(id, $"{login}@email.pl", login, "password", "admin"));
             }
-
+        
+            
+            
 
             await Task.WhenAll(tasks);
             _logger.LogTrace("Data was initialized");

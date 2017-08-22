@@ -22,10 +22,10 @@ namespace Transporter.Infrastructure.Handlers.Drivers
 
         public async Task HandleAsync(CreateDriver command)
         {
-            await _driverService.CreateDriverAsync(command.UserId);
+            await _driverService.CreateDriverAsync(command.userId);
             var vehicle = command.Vehicle;
-            await _driverService.SetVehicleAsync(command.UserId, vehicle.Brand,
-                vehicle.Name, vehicle.Seats);
+            await _driverService.SetVehicleAsync(command.userId, vehicle.Brand,
+                vehicle.Name);
         }
 
         private async Task<User> IsValidUserId(Guid id)

@@ -24,7 +24,7 @@ namespace Transporter.Infrastructure.Handlers.Users
         {
             await _userService.LoginAsync(command.Email, command.Password);
             var user = await _userService.GetAsync(command.Email);
-            var jwtToken = _jwtHandler.CreateToken(command.Email, user.Role);
+            var jwtToken = _jwtHandler.CreateToken(user.Id, user.Role);
             _cache.SetJwt(command.TokenId,jwtToken);
         }
     }
